@@ -25,7 +25,7 @@ export function SerchBar() {
         <div className="w-[40%] h-full flex items-center justify-center border-r border-r-gray-200 dark:border-r-gray-500 bg-white dark:bg-slate-800 m-0">
           <p
             id="guestsOnMainDisplay"
-            className="px-3 text-xs font-light text-center text-gray-300 focus:outline-none">
+            className="px-3 text-xs font-light text-center text-gray-300 dark:text-slate-500 focus:outline-none">
             Add guests
           </p>
         </div>
