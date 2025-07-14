@@ -1,10 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { LocationModal } from "./LocationModal";
+import useToggleModal from "../hooks/useToggleModal";
+import { GuestModal } from "./GuestModal";
 
-export function ModalSearchBar({ setModal }) {
+export function ModalSearchBar({ setModal, setLocation, location, setNumGuests, setBtnPress, btnPress, setBtn }) {
+  const [inputValue, setInputValue] = useState("");
+  const [guests, setGuests] = useState(0);
+  const { modalOn, toggleModal } = useToggleModal();
+  let inputReady = false;
+
+  const modalOut = (e) => {
+    const clickedInsideMod = e.target.closest("#mod");
+    if (!clickedInsideMod && modalOn) {
+      toggleModal();
+    }
+  };
+
+  useEffect(() => {
+  if (location) {
+    setInputValue(`${location.city}, ${location.country}`);
+  }
+}, [location]);
+
+//   const momodal = (e) => {
+//     const clickedInsideMod = e.target.closest("#mod");
+//     if (clickedInsideMod && modalOn) {
+//       console.log("si");
+//     } else {
+//       console.log("no");
+//     }
+//   };
+
   return (
     <>
       <div id="modal" onClick={setModal} className="fixed inset-0 bg-black/50 z-50">
-        <div className="w-full h-[80%] flex flex-col justify-between items-center bg-white dark:bg-slate-800 md:h-[60%] z-60">
+        <div
+          onClick={modalOut}
+          className="w-full h-[80%] flex flex-col justify-between items-center bg-white dark:bg-slate-800 md:h-[60%] z-60">
           {/* <!-- edit your search (only mobile) --> */}
           <div className="w-full p-4 pt-5 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 md:hidden">
             <p>Edit your search</p>
@@ -19,71 +51,39 @@ export function ModalSearchBar({ setModal }) {
                 <p className="text-[8px] text-gray-500 font-bold">LOCATION</p>
                 <input
                   type="text"
+                  value={inputValue}
                   placeholder="Add location"
                   className="text-sm text-gray-800 focus:outline-none dark:text-slate-300"
+                  onChange={(e) => setInputValue(e.target.value)}
                 />
-                {/* <!-- Location reference --> */}
-                <div className="hidden w-60 h-60 fixed flex-col mt-20 ml-[-5px] gap-3 bg-white dark:bg-slate-800 md:mt-7">
-                  {/* <!-- list example --> */}
-                  <div className="flex gap-1 text-xs text-gray-500">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 16 16"
-                      fill="currentColor"
-                      className="size-4 text-gray-600 fill-current">
-                      <path
-                        fill-rule="evenodd"
-                        d="m7.539 14.841.003.003.002.002a.755.755 0 0 0 .912 0l.002-.002.003-.003.012-.009a5.57 5.57 0 0 0 .19-.153 15.588 15.588 0 0 0 2.046-2.082c1.101-1.362 2.291-3.342 2.291-5.597A5 5 0 0 0 3 7c0 2.255 1.19 4.235 2.292 5.597a15.591 15.591 0 0 0 2.046 2.082 8.916 8.916 0 0 0 .189.153l.012.01ZM8 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <p>Vaasa, Finland</p>
-                  </div>
-                </div>
+                {/* Location MODAL */}
+                {inputValue !== "" && !modalOn && !inputReady && (
+                  <LocationModal
+                  inputValue={inputValue}
+                  setLocation={setLocation}
+                  ></LocationModal>
+                )}
               </div>
               {/* <!-- Enter Guests --> */}
               <div className="w-[34%] p-2 px-3 border-gray-200 md:border-r dark:border-gray-500">
                 <p className="text-[9px] text-gray-500 font-bold">GUESTS</p>
-                <p id="guestsOnDisplay" className="text-sm text-gray-400">
-                  Add guests
+                <p onClick={toggleModal} className="text-sm text-gray-400">
+                  {guests > 0 ? `${guests} guests` : "Add guests"}
                 </p>
-                {/* <!-- Guests form --> */}
-                <div className="hidden fixed flex-col mt-10 gap-10">
-                  {/* <!-- Adults --> */}
-                  <div className="flex flex-col">
-                    <div className="text-[12px] font-bold">Adults</div>
-                    <div className="text-[12px] text-gray-400 mb-2">Ages 13 or above</div>
-                    <div className="flex items-center gap-5 text-[10px] font-bold">
-                      <button className="size-5 border rounded-sm border-gray-400 bg-gray-200 dark:bg-slate-700 dark:text-slate-300">
-                        -
-                      </button>
-                      <div id="adults" className="text-sm">
-                        0
-                      </div>
-                      <button className="size-5 border rounded-sm border-gray-400 bg-gray-200 dark:bg-slate-700 dark:text-slate-300">
-                        +
-                      </button>
-                    </div>
+                {/* Guests MODAL*/}
+                {modalOn && (
+                  <div>
+                    <GuestModal setNumGuests={setNumGuests} setGuests={setGuests}></GuestModal>
                   </div>
-                  {/* <!-- Children --> */}
-                  <div className="flex flex-col">
-                    <div className="text-[12px] font-bold">Children</div>
-                    <div className="text-[12px] text-gray-400 mb-2">Ages 12 or below</div>
-                    <div className="flex items-center gap-5 text-[10px] font-bold">
-                      <button className="size-5 border rounded-sm border-gray-400 bg-gray-200 dark:bg-slate-700 dark:text-slate-300">
-                        -
-                      </button>
-                      <div className="text-sm">0</div>
-                      <button className="size-5 border rounded-sm border-gray-400 bg-gray-200 dark:bg-slate-700 dark:text-slate-300">
-                        +
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
               {/* <!-- Serch btn only md+ --> */}
               <div className="hidden w-[32%] h-[70%] m-5 items-center justify-center md:flex">
-                <button className="w-[40%] h-full flex items-center justify-center rounded-xl bg-[#eb5757] hover:bg-[#bd5e5e] focus:bg-[#fb8c8c] gap-2">
+                <button id="btn1" onClick={() => {
+                    setBtnPress(!btnPress);
+                    setBtn(false);
+                    setModal;
+                }} className="w-[40%] h-full flex items-center justify-center rounded-xl bg-[#eb5757] hover:bg-[#bd5e5e] focus:bg-[#fb8c8c] gap-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -101,7 +101,11 @@ export function ModalSearchBar({ setModal }) {
             </div>
           </div>
           {/* <!-- Search btn movile only --> */}
-          <button className="w-[30%] h-[6%] m-5 flex items-center justify-center rounded-xl bg-[#eb5757] hover:bg-[#bd5e5e] focus:bg-[#fb8c8c] gap-2 md:hidden">
+          <button id="btn2" onClick={() => {
+                    setBtnPress(!btnPress);
+                    setBtn(false);
+                    setModal;
+                }} className="w-[30%] h-[6%] m-5 flex items-center justify-center rounded-xl bg-[#eb5757] hover:bg-[#bd5e5e] focus:bg-[#fb8c8c] gap-2 md:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"

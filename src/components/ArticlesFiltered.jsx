@@ -1,25 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Skeleton from "./Skeleton";
-import { useHoteles } from "../hooks/useHoteles";
 
-export function Articles() {
-  const { articles, loading } = useHoteles();
+export function ArticlesFiltered({ filteredHotels }) {
+  const [loading, setLoading] = useState(true)
+  const [articles, setArticles] = useState([])
+  useEffect(() => {
+    function renderArticles() {
+      const arts = filteredHotels;
+      setArticles(arts);
+    }
+    renderArticles();
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, [filteredHotels]);
 
   return (
     <>
       {loading ? (
         <section className="w-full grid grid-cols-1 place-content-center place-items-center gap-4 md:grid-cols-2 md:gap-3 xl:grid-cols-3">
           {articles &&
-            articles.data.map(() => (
+            articles.map(() => (
               <section className="w-full " key={Math.random()}>
                 <Skeleton />
               </section>
-            ))}{" "}
+            ))}
         </section>
       ) : (
         <section className="w-full grid grid-cols-1 place-content-center place-items-center gap-4 md:grid-cols-2 md:gap-3 xl:grid-cols-3">
           {articles &&
-            articles.data.map((article) => (
+            articles.map((article) => (
               <article
                 key={Math.random()}
                 className="w-[90%] flex flex-col items-center justify-center overflow-hidden transform transition-transform duration-400 hover:scale-102">
