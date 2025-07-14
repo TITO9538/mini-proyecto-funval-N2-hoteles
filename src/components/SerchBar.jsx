@@ -8,7 +8,7 @@ export function SerchBar({ setLocation, setNumGuests, setBtnPress, location, btn
 
   const modalOut = (e) => {
     const { id } = e.target;
-    if (id === "modal" || id === "btn1" || id === "btn2") {
+    if (id === "modal" || id === "btn1" || id === "btn2" || id === "btn") {
       toggleModal();
     }
   };

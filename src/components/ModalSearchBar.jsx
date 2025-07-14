@@ -40,7 +40,7 @@ export function ModalSearchBar({ setModal, setLocation, location, setNumGuests, 
           {/* <!-- edit your search (only mobile) --> */}
           <div className="w-full p-4 pt-5 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 md:hidden">
             <p>Edit your search</p>
-            <button className="text-xl">X</button>
+            <button id="btn" className="text-xl">x</button>
           </div>
           {/* <!-- Location & Guests box --> */}
           <div className="w-[85%] h-[70%] flex flex-col md:pt-15">
